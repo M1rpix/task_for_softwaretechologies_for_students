@@ -16,7 +16,9 @@ public class EmployeeFactory {
 
 
     public static Employee createEmployee(String name, int baseSalary, EmployeeType type) {
-        // TODO: реализуйте вышеуказанную функцию
+        return switch (type){
+
+        }
 
         return null;
     }
