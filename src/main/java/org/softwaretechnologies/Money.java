@@ -2,6 +2,7 @@ package org.softwaretechnologies;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -26,9 +27,27 @@ public class Money {
      */
     @Override
     public boolean equals(Object o) {
-        // TODO: реализуйте вышеуказанную функцию
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Money)) {
+            return false;
+        }
 
-        return false;
+        Money other = (Money) o;
+
+        if (!Objects.equals(type, other.type)) {
+            return false;
+        }
+
+        if (amount == null || other.amount == null) {
+            return amount == other.amount;
+        }
+
+        BigDecimal thisAmount = amount.setScale(4, RoundingMode.HALF_UP);
+        BigDecimal otherAmount = other.amount.setScale(4, RoundingMode.HALF_UP);
+
+        return thisAmount.equals(otherAmount);
     }
 
     /**
@@ -48,11 +67,45 @@ public class Money {
      */
     @Override
     public int hashCode() {
-        // TODO: реализуйте вышеуказанную функцию
+        BigDecimal amountPart;
 
+        if (amount == null) {
+            amountPart = BigDecimal.valueOf(10000);
+        } else {
+            amountPart = amount
+                    .setScale(4, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(10000));
+        }
 
-        Random random = new Random();
-        return random.nextInt();
+        if (amountPart.compareTo(BigDecimal.valueOf(Integer.MAX_VALUE - 5)) >= 0) {
+            return Integer.MAX_VALUE;
+        }
+
+        int typeCode;
+
+        if (type == null) {
+            typeCode = 5;
+        } else {
+            switch (type) {
+                case USD:
+                    typeCode = 1;
+                    break;
+                case EURO:
+                    typeCode = 2;
+                    break;
+                case RUB:
+                    typeCode = 3;
+                    break;
+                case KRONA:
+                    typeCode = 4;
+                    break;
+                default:
+                    typeCode = 5;
+                    break;
+            }
+        }
+
+        return amountPart.intValue() + typeCode;
     }
 
     /**
@@ -74,9 +127,13 @@ public class Money {
      */
     @Override
     public String toString() {
-        // TODO: реализуйте вышеуказанную функцию
-        String str = type.toString()+": "+amount.setScale(4, RoundingMode.HALF_UP).toString();
-        return str;
+        String typeStr = type == null ? "null" : type.toString();
+
+        String amountStr = amount == null
+                ? "null"
+                : amount.setScale(4, RoundingMode.HALF_UP).toString();
+
+        return typeStr + ": " + amountStr;
     }
 
     public BigDecimal getAmount() {
