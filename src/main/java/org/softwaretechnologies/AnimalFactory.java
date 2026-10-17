@@ -2,6 +2,10 @@ package org.softwaretechnologies;
 
 import org.softwaretechnologies.animals.Animal;
 import org.softwaretechnologies.animals.AnimalType;
+import org.softwaretechnologies.animals.Dog;
+import org.softwaretechnologies.animals.Cat;
+import org.softwaretechnologies.animals.Cow;
+
 
 public class AnimalFactory {
 
@@ -14,8 +18,17 @@ public class AnimalFactory {
 
 
     public static Animal createAnimal(String name, AnimalType type) {
-        /* TODO в зависимости от type создайте и верните нужное животное */
-
-        return null;
+        switch (type){
+            case CAT -> {
+                return new Cat(name);
+            }
+            case DOG -> {
+                return new Dog(name);
+            }
+            case COW -> {
+                return new Cow(name);
+            }
+            default -> throw new IllegalArgumentException("Неизвестный тип животного" + type);
+        }
     }
 }
